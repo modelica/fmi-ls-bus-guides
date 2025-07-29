@@ -1,0 +1,43 @@
+name: Build Guides
+
+on:
+  push:
+    branches-ignore: [ 'temp/*' ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  build-guides:
+    name: Build FMI-LS-BUS Guides
+
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: checkout
+      uses: actions/checkout@v3
+    - name: prepare
+      run: mkdir build && mkdir build/ls-bus-guide
+    - name: build LS-BUS implementers guide
+      uses: avattathil/asciidoctor-action@master
+      with:
+        program: "asciidoctor -D build/ls-bus-guide --backend=html5 --attribute=revnumber=${GITHUB_REF#refs/heads/}-$GITHUB_SHA --attribute=revdate=$(date +%F) ls-bus-guide/index.adoc"
+    - name: copy images
+      run: tar cf - ls-bus-guide/images | tar xfC - build
+    - name: archive LS-BUS implementers guide
+      uses: actions/upload-artifact@v4
+      with:
+        name: LS-BUS-Guide
+        path: build/ls-bus-guide/*
+        if-no-files-found: error
+    - name: extract branch name
+      id: extract_branch
+      shell: bash
+      run: echo "branch=$(echo ${GITHUB_REF#refs/heads/})" >> $GITHUB_OUTPUT
+    - name: deploy
+      if: github.ref == 'refs/heads/main' && github.event_name == 'push'
+      uses: peaceiris/actions-gh-pages@v3.9.3
+      with:
+        github_token: ${{ secrets.GITHUB_TOKEN }}
+        publish_dir: build
+        destination_dir: ${{ steps.extract_branch.outputs.branch }}
+        enable_jekyll: true
