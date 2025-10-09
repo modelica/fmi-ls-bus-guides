@@ -17,4 +17,4 @@ standard.
 
 [FMI-LS-BUS]: https://github.com/modelica/fmi-ls-bus/
 [github]: index.adoc
-[guide]: https://modelica.github.io/fmi-guides/main/ls-bus-guide/
+[guide]: https://modelica.github.io/fmi-ls-bus-guides/main/ls-bus-guide/
