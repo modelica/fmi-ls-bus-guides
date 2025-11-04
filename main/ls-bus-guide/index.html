@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<meta name="generator" content="Asciidoctor 2.0.23">
+<meta name="generator" content="Asciidoctor 2.0.26">
 <title>FMI LS BUS Implementers' Guide</title>
 <style>
 /* Asciidoctor default stylesheet | MIT License | http://asciidoctor.org */
@@ -586,8 +586,8 @@ document.addEventListener('keydown', (event) => {
 <div id="header">
 <h1>FMI LS BUS Implementers' Guide</h1>
 <div class="details">
-<span id="revnumber">version main-4e02b37bb5c0d42c57422b32b8128a0d1a8904e5,</span>
-<span id="revdate">2025-10-09</span>
+<span id="revnumber">version main-ac2c8bef0adc2f119f8243f98db0ae2e1bbf069b,</span>
+<span id="revdate">2025-11-04</span>
 </div>
 <div id="toc" class="toc2">
 <div id="toctitle">Contents</div>
@@ -610,7 +610,7 @@ document.addEventListener('keydown', (event) => {
 <li><a href="#_processing_of_bus_operations">4.1.1.7. Processing of Bus Operations</a></li>
 </ul>
 </li>
-<li><a href="#low-cut-can-demos">4.1.2. Demos</a></li>
+<li><a href="#low-cut-can-examples">4.1.2. Examples</a></li>
 <li><a href="#low-cut-can-sequence-diagrams">4.1.3. Sequence Diagrams</a>
 <ul class="sectlevel4">
 <li><a href="#low-cut-can-example-transmission">4.1.3.1. Transmission</a></li>
@@ -634,7 +634,7 @@ document.addEventListener('keydown', (event) => {
 <li><a href="#low-cut-flexray-timing">4.2.1.7. Timing</a></li>
 </ul>
 </li>
-<li><a href="#low-cut-flexray-demos">4.2.2. Demos</a></li>
+<li><a href="#low-cut-flexray-examples">4.2.2. Examples</a></li>
 </ul>
 </li>
 </ul>
@@ -1219,18 +1219,18 @@ After this, they can be further processed.</p>
 </div>
 </div>
 <div class="sect3">
-<h4 id="low-cut-can-demos">4.1.2. Demos</h4>
+<h4 id="low-cut-can-examples">4.1.2. Examples</h4>
 <div class="paragraph">
-<p>The following list contains demos, which illustrate both the Bus Simulation as such and Network FMUs of various designs:</p>
+<p>The following list contains examples, which illustrate both the Bus Simulation as such and Network FMUs of various designs (the code is maintained in the <a href="https://github.com/modelica/fmi-ls-bus-examples" class="bare">https://github.com/modelica/fmi-ls-bus-examples</a> repository):</p>
 </div>
 <div class="ulist">
 <ul>
 <li>
-<p><a href="https://github.com/modelica/fmi-ls-bus-guides/tree/main/ls-bus-guide/demos/can-bus-simulation">CAN Bus Simulation</a>: Represents an exemplary Bus Simulation FMU for CAN.
+<p><a href="https://github.com/modelica/fmi-ls-bus-examples/tree/main/can-bus-simulation">CAN Bus Simulation</a>: Represents an exemplary Bus Simulation FMU for CAN.
 This Bus Simulation can be used in combination with the other Network FMUs listed below.</p>
 </li>
 <li>
-<p><a href="https://github.com/modelica/fmi-ls-bus-guides/tree/main/ls-bus-guide/demos/can-node-triggered-output">CAN Triggered Output</a>: This demo Network FMU demonstrates sending and receiving multiple CAN Transmit operations using <code>triggered</code> output clocks.</p>
+<p><a href="https://github.com/modelica/fmi-ls-bus-examples/tree/main/can-node-triggered-output">CAN Triggered Output</a>: This demo Network FMU demonstrates sending and receiving multiple CAN Transmit operations using <code>triggered</code> output clocks.</p>
 </li>
 </ul>
 </div>
@@ -1809,18 +1809,18 @@ Using it, the currently pending cycle and macro tick can be calculated based on 
 </div>
 </div>
 <div class="sect3">
-<h4 id="low-cut-flexray-demos">4.2.2. Demos</h4>
+<h4 id="low-cut-flexray-examples">4.2.2. Examples</h4>
 <div class="paragraph">
-<p>The following list contains demos, which illustrate both the Bus Simulation as such and Network FMUs of various designs:</p>
+<p>The following list contains examples, which illustrate both the Bus Simulation as such and Network FMUs of various designs (the code is maintained in the <a href="https://github.com/modelica/fmi-ls-bus-examples" class="bare">https://github.com/modelica/fmi-ls-bus-examples</a> repository):</p>
 </div>
 <div class="ulist">
 <ul>
 <li>
-<p><a href="https://github.com/modelica/fmi-ls-bus-guides/tree/main/ls-bus-guide/demos/flexray-bus-simulation">FlexRay Bus Simulation</a>: Represents an exemplary Bus Simulation FMU for FlexRay.
+<p><a href="https://github.com/modelica/fmi-ls-bus-examples/tree/main/flexray-bus-simulation">FlexRay Bus Simulation</a>: Represents an exemplary Bus Simulation FMU for FlexRay.
 This Bus Simulation can be used in combination with the other Network FMUs listed below.</p>
 </li>
 <li>
-<p><a href="https://github.com/modelica/fmi-ls-bus-guides/tree/main/ls-bus-guide/demos/flexray-node">FlexRay Countdown Clocks</a>: This demo Network FMU demonstrates startup, sending and receiving multiple Transmit operations using <code>countdown</code> clocks.</p>
+<p><a href="https://github.com/modelica/fmi-ls-bus-examples/tree/main/flexray-node">FlexRay Countdown Clocks</a>: This demo Network FMU demonstrates startup, sending and receiving multiple Transmit operations using <code>countdown</code> clocks.</p>
 </li>
 </ul>
 </div>
@@ -1874,6 +1874,6 @@ MathJax.Hub.Register.StartupHook("AsciiMath Jax Ready", function () {
   })
 })
 </script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.9/MathJax.js?config=TeX-MML-AM_HTMLorMML"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.9/MathJax.js?config=TeX-MML-AM_CHTML"></script>
 </body>
 </html>
