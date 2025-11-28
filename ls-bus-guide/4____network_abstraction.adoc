@@ -140,7 +140,7 @@ According to the same principles, any specified operation can be created using t
 ===== Transmitting Bus Operations
 Within the layered standard, the https://modelica.github.io/fmi-ls-bus/main/#low-cut-variables[connection] between the data to be exchanged (`TX_Data` and `Rx_Data`) and the time of exchange 
 (`Tx_Clock` and `Rx_Clock`) has been well defined.
-The https://modelica.github.io/fmi-ls-bus/main/#low-cut-tx-triggered-clock-variables[simplest case] represents a `triggered` `Tx_Clock` that basically allows to signal events when returning from `fmi3DoStep`.
+The https://modelica.github.io/fmi-ls-bus/main/#low-cut-tx-triggered-clocks[simplest case] represents a `triggered` `Tx_Clock` that basically allows to signal events when returning from `fmi3DoStep`.
 
 The program code below schematically illustrates an implementation.
 `fmi3GetClock` is called by the FMU importer in `Event Mode` after `fmi3DoStep` has completed or ended prematurely.
@@ -193,7 +193,7 @@ fmi3Status fmi3GetBinary(fmi3Instance instance,
 
 Note that, according to the FMI 3.0 standard, `fmi3GetClock` only returns `fmi3ClockActive` once per clock activation.
 
-It should be clear that, depending on the application, the different FMI clock types each offer advantages and disadvantages. See also the https://modelica.github.io/fmi-ls-bus/main/#low-cut-selecting-tx-variables[corresponding chapter in the layered standard].
+It should be clear that, depending on the application, the different FMI clock types each offer advantages and disadvantages. See also the https://modelica.github.io/fmi-ls-bus/main/#low-cut-tx-clocks[corresponding chapter in the layered standard].
 
 [NOTE]
 .Summary
