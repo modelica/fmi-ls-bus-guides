@@ -586,8 +586,8 @@ document.addEventListener('keydown', (event) => {
 <div id="header">
 <h1>FMI LS BUS Implementers' Guide</h1>
 <div class="details">
-<span id="revnumber">version main-ac2c8bef0adc2f119f8243f98db0ae2e1bbf069b,</span>
-<span id="revdate">2025-11-04</span>
+<span id="revnumber">version main-5b5c4bd44719e33860a9a0b926031086b4b14fcc,</span>
+<span id="revdate">2025-11-28</span>
 </div>
 <div id="toc" class="toc2">
 <div id="toctitle">Contents</div>
@@ -956,7 +956,7 @@ fmi3Status fmi3DoStep(..., eventHandlingNeeded, ...) {
 <div class="paragraph">
 <p>Within the layered standard, the <a href="https://modelica.github.io/fmi-ls-bus/main/#low-cut-variables">connection</a> between the data to be exchanged (<code>TX_Data</code> and <code>Rx_Data</code>) and the time of exchange
 (<code>Tx_Clock</code> and <code>Rx_Clock</code>) has been well defined.
-The <a href="https://modelica.github.io/fmi-ls-bus/main/#low-cut-tx-triggered-clock-variables">simplest case</a> represents a <code>triggered</code> <code>Tx_Clock</code> that basically allows to signal events when returning from <code>fmi3DoStep</code>.</p>
+The <a href="https://modelica.github.io/fmi-ls-bus/main/#low-cut-tx-triggered-clocks">simplest case</a> represents a <code>triggered</code> <code>Tx_Clock</code> that basically allows to signal events when returning from <code>fmi3DoStep</code>.</p>
 </div>
 <div class="paragraph">
 <p>The program code below schematically illustrates an implementation.
@@ -1029,7 +1029,7 @@ fmi3Status fmi3GetBinary(fmi3Instance instance,
 <p>Note that, according to the FMI 3.0 standard, <code>fmi3GetClock</code> only returns <code>fmi3ClockActive</code> once per clock activation.</p>
 </div>
 <div class="paragraph">
-<p>It should be clear that, depending on the application, the different FMI clock types each offer advantages and disadvantages. See also the <a href="https://modelica.github.io/fmi-ls-bus/main/#low-cut-selecting-tx-variables">corresponding chapter in the layered standard</a>.</p>
+<p>It should be clear that, depending on the application, the different FMI clock types each offer advantages and disadvantages. See also the <a href="https://modelica.github.io/fmi-ls-bus/main/#low-cut-tx-clocks">corresponding chapter in the layered standard</a>.</p>
 </div>
 <div class="admonitionblock note">
 <table>
