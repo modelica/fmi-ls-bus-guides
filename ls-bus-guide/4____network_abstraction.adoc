@@ -110,13 +110,13 @@ fmi3Status fmi3DoStep(..., eventHandlingNeeded, ...) {
     /* Create a CAN Transmit operation to be send */
     FMI3_LS_BUS_CAN_CREATE_OP_CAN_TRANSMIT(&TxBufferInfoCan, msgId, <options>, sizeof(msg), msg);    // <4>
 
-    if(!TxBufferInfoCan.status){   // <5>
+    if (!TxBufferInfoCan.status) {   // <5>
         /* Error: No free buffer space available */
     }
 
     ...
 
-    if(FMI3_LS_BUS_BUFFER_LENGTH(&TxBufferInfoCan) > 0){
+    if (FMI3_LS_BUS_BUFFER_LENGTH(&TxBufferInfoCan) > 0) {
         *eventHandlingNeeded = fmi3True;    // <6>
     }
 }
@@ -162,8 +162,11 @@ fmi3Status fmi3GetClock(fmi3Instance instance,
     ...
     for (size_t i = 0; i < nValueReferences; i++) { 
         if (valueReferences[i] == TX_CLOCK_REFERENCE) {
-            if(!FMI3_LS_BUS_BUFFER_IS_EMPTY(&TxBufferInfoCan)) {    // <1>
+            if (!FMI3_LS_BUS_BUFFER_IS_EMPTY(&TxBufferInfoCan)) {   // <1>
                 values[i] = fmi3ClockActive;                        // <2>
+            }
+            else {
+                values[i] = fmi3ClockInactive;                      // <3>              
             }
         }
     }
@@ -179,17 +182,26 @@ fmi3Status fmi3GetBinary(fmi3Instance instance,
     ...
     for (size_t i = 0; i < nValueReferences; i++) {
         if (valueReferences[i] == TX_DATA_REFERENCE) {
-            values[i] = FMI3_LS_BUS_BUFFER_START(&TxBufferInfoCan);        // <3>
-            valueSizes[i] = FMI3_LS_BUS_BUFFER_LENGTH(&TxBufferInfoCan);   // <4>
+            values[i] = FMI3_LS_BUS_BUFFER_START(&TxBufferInfoCan);        // <4>
+            valueSizes[i] = FMI3_LS_BUS_BUFFER_LENGTH(&TxBufferInfoCan);   // <5>
         }
     }
+    ...
+}
+
+fmi3Status fmi3UpdateDiscreteStates(...) {
+    ...
+    /* Reset read/write positions */
+    FMI3_LS_BUS_BUFFER_INFO_RESET(&TxBufferInfoCan);    // <6>
     ...
 }
 ----
 <1> Verify if Bus Operations exist for transfer.
 <2> Activate specified `Tx_Clock`.
-<3> Get the start memory address of the buffer, by using `fmi3LsBusUtilBufferInfo` instance.
-<4> Get the size of the buffer, by using `fmi3LsBusUtilBufferInfo` instance.
+<3> Deactivate specified `Tx_Clock`.
+<4> Get the start memory address of the buffer, by using `fmi3LsBusUtilBufferInfo` instance.
+<5> Get the size of the buffer, by using `fmi3LsBusUtilBufferInfo` instance.
+<6> Reset the transmission buffer so data is not transmitted again.
 
 Note that, according to the FMI 3.0 standard, `fmi3GetClock` only returns `fmi3ClockActive` once per clock activation.
 
@@ -222,7 +234,7 @@ fmi3Status fmi3SetClock(fmi3Instance instance,
                          const fmi3clock values[]) {
     ...
     for (size_t i = 0; i < nValueReferences; i++) {
-        if (valueReferences[i] == RX_CLOCK_REFERENCE && values[i] == fmi3ClockActive) { // <1>
+        if (valueReferences[i] == RX_CLOCK_REFERENCE) { // <1>
             /* Set an indicator that clock ticked and new Bus Operations arrived */
             RxClock = values[i]; // <2>
         }
@@ -237,8 +249,11 @@ fmi3Status fmi3SetBinary(fmi3Instance instance,
                           const fmi3Binary value, ...) {
     ...
     for (size_t i = 0; i < nValueReferences; i++) {
-        if (valueReferences[i] == RX_DATA_REFERENCE && RxClock == fmi3ClockActive) {    
-            FMI3_LS_BUS_BUFFER_WRITE(&RxBufferInfoCan, value[i], valueSize[i]); // <3>
+        if (valueReferences[i] == RX_DATA_REFERENCE) {
+            /* Reset read/write positions */
+            FMI3_LS_BUS_BUFFER_INFO_RESET(&RxBufferInfoCan);                    // <3>    
+            /* Write buffer */
+            FMI3_LS_BUS_BUFFER_WRITE(&RxBufferInfoCan, value[i], valueSize[i]); // <4>
         }
     }
     ...
@@ -246,7 +261,8 @@ fmi3Status fmi3SetBinary(fmi3Instance instance,
 ----
 <1> Check if `Rx_Clock` has ticked.
 <2> Store the information for global access within other FMI interface functions.
-<3> Create an `fmi3LsBusUtilBufferInfo` instance based on received Bus Operations.
+<3> Reset buffer to remove obsolete reception data.
+<4> Create an `fmi3LsBusUtilBufferInfo` instance based on received Bus Operations.
 
 [NOTE]
 .Summary
@@ -518,13 +534,13 @@ fmi3Status fmi3DoStep(..., eventHandlingNeeded, ...) {
     FMI3_LS_BUS_FLEXRAY_CREATE_OP_TRANSMIT(&TxBufferInfoFlexRay, cycleId, 
        slotId, FMI3_LS_BUS_FLEXRAY_CHANNEL_A, <options>, sizeof(msg), msg);    // <4>
 
-    if(!TxBufferInfoFlexRay.status){    // <5>
+    if (!TxBufferInfoFlexRay.status) {    // <5>
         /* Error: No free buffer space available */
     }
 
     ...
 
-    if(FMI3_LS_BUS_BUFFER_LENGTH(&TxBufferInfoFlexRay) > 0){
+    if (FMI3_LS_BUS_BUFFER_LENGTH(&TxBufferInfoFlexRay) > 0) {
         *eventHandlingNeeded = fmi3True;    // <6>
     }
 }
@@ -566,7 +582,7 @@ fmi3Status fmi3SetClock(fmi3Instance instance,
                          const fmi3clock values[]) {
     ...
     for (size_t i = 0; i < nValueReferences; i++) {
-        if (valueReferences[i] == RX_CLOCK_REFERENCE && values[i] == fmi3ClockActive) { // <1>
+        if (valueReferences[i] == RX_CLOCK_REFERENCE) { // <1>
             /* Set an indicator that clock ticked and new Bus Operations arrived */
             RxClock = values[i]; // <2>
         }
@@ -581,8 +597,11 @@ fmi3Status fmi3SetBinary(fmi3Instance instance,
                           const fmi3Binary value, ...) {
     ...
     for (size_t i = 0; i < nValueReferences; i++) {
-        if (valueReferences[i] == RX_DATA_REFERENCE && RxClock == fmi3ClockActive) {    
-            FMI3_LS_BUS_BUFFER_WRITE(&RxBufferInfoFlexRay, value[i], valueSize[i]); // <3>
+        if (valueReferences[i] == RX_DATA_REFERENCE) {
+            /* Reset read/write positions */
+            FMI3_LS_BUS_BUFFER_INFO_RESET(&RxBufferInfoFlexRay);                    // <3>
+            /* Write buffer */    
+            FMI3_LS_BUS_BUFFER_WRITE(&RxBufferInfoFlexRay, value[i], valueSize[i]); // <4>
         }
     }
     ...
@@ -590,7 +609,8 @@ fmi3Status fmi3SetBinary(fmi3Instance instance,
 ----
 <1> Check if `Rx_Clock` has ticked.
 <2> Store the information for global access within other FMI interface functions.
-<3> Create an `fmi3LsBusUtilBufferInfo` instance based on received Bus Operations.
+<3> Reset buffer to remove obsolete reception data.
+<4> Create an `fmi3LsBusUtilBufferInfo` instance based on received Bus Operations.
 
 [NOTE]
 .Summary
