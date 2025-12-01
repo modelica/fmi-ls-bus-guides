@@ -860,7 +860,7 @@ fmi3Status fmi3UpdateDiscreteStates(...) {
 <2> Activate specified `Tx_Clock`.
 <3> Get the start memory address of the buffer, by using `fmi3LsBusUtilBufferInfo` instance.
 <4> Get the size of the buffer, by using `fmi3LsBusUtilBufferInfo` instance.
-<5> Data will be transmitted twice if there is more than one super-dense time step.
+<5> Reset the transmission buffer so data is not transmitted again.
 
 Note that, according to the FMI 3.0 standard, `fmi3GetClock` only returns `fmi3ClockActive` once per clock activation.
 
@@ -893,7 +893,7 @@ fmi3Status fmi3SetClock(fmi3Instance instance,
                          const fmi3clock values[]) {
     ...
     for (size_t i = 0; i < nValueReferences; i++) {
-        if (valueReferences[i] == RX_CLOCK_REFERENCE && values[i] == fmi3ClockActive) { // <1>
+        if (valueReferences[i] == RX_CLOCK_REFERENCE) { // <1>
             /* Set an indicator that clock ticked and new Bus Operations arrived */
             RxClock = values[i]; // <2>
         }
@@ -907,9 +907,13 @@ fmi3Status fmi3SetBinary(fmi3Instance instance,
                           const size_t valueSize, 
                           const fmi3Binary value, ...) {
     ...
+
     for (size_t i = 0; i < nValueReferences; i++) {
-        if (valueReferences[i] == RX_DATA_REFERENCE && RxClock == fmi3ClockActive) {    
-            FMI3_LS_BUS_BUFFER_WRITE(&RxBufferInfoEth, value[i], valueSize[i]); // <3>
+        if (valueReferences[i] == RX_DATA_REFERENCE) {   
+            /* Reset read/write positions */
+            FMI3_LS_BUS_BUFFER_INFO_RESET(&RxBufferInfoEth);                    // <3>
+            /* Write buffer */
+            FMI3_LS_BUS_BUFFER_WRITE(&RxBufferInfoEth, value[i], valueSize[i]); // <4>
         }
     }
     ...
@@ -917,7 +921,8 @@ fmi3Status fmi3SetBinary(fmi3Instance instance,
 ----
 <1> Check if `Rx_Clock` has ticked.
 <2> Store the information for global access within other FMI interface functions.
-<3> Create an `fmi3LsBusUtilBufferInfo` instance based on received Bus Operations.
+<3> Reset buffer to remove obsolete reception data.
+<4> Create an `fmi3LsBusUtilBufferInfo` instance based on received Bus Operations.
 
 [NOTE]
 .Summary
