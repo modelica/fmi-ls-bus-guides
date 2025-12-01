@@ -825,8 +825,11 @@ fmi3Status fmi3GetClock(fmi3Instance instance,
     ...
     for (size_t i = 0; i < nValueReferences; i++) { 
         if (valueReferences[i] == TX_CLOCK_REFERENCE) {
-            if(!FMI3_LS_BUS_BUFFER_IS_EMPTY(&TxBufferInfoEth)) {    // <1>
+            if (!FMI3_LS_BUS_BUFFER_IS_EMPTY(&TxBufferInfoEth)) {   // <1>
                 values[i] = fmi3ClockActive;                        // <2>
+            } 
+            else {
+                values[i] = fmi3ClockInactive;                      // <3>              
             }
         }
     }
@@ -842,8 +845,8 @@ fmi3Status fmi3GetBinary(fmi3Instance instance,
     ...
     for (size_t i = 0; i < nValueReferences; i++) {
         if (valueReferences[i] == TX_DATA_REFERENCE) {
-            values[i] = FMI3_LS_BUS_BUFFER_START(&TxBufferInfoEth);        // <3>
-            valueSizes[i] = FMI3_LS_BUS_BUFFER_LENGTH(&TxBufferInfoEth);   // <4>
+            values[i] = FMI3_LS_BUS_BUFFER_START(&TxBufferInfoEth);        // <4>
+            valueSizes[i] = FMI3_LS_BUS_BUFFER_LENGTH(&TxBufferInfoEth);   // <5>
         }
     }
     ...
@@ -852,15 +855,16 @@ fmi3Status fmi3GetBinary(fmi3Instance instance,
 fmi3Status fmi3UpdateDiscreteStates(...) {
     ...
     /* Reset read/write positions */
-    FMI3_LS_BUS_BUFFER_INFO_RESET(&TxBufferInfoEth);    // <5>
+    FMI3_LS_BUS_BUFFER_INFO_RESET(&TxBufferInfoEth);    // <6>
     ...
 }
 ----
 <1> Verify if Bus Operations exist for transfer.
 <2> Activate specified `Tx_Clock`.
-<3> Get the start memory address of the buffer, by using `fmi3LsBusUtilBufferInfo` instance.
-<4> Get the size of the buffer, by using `fmi3LsBusUtilBufferInfo` instance.
-<5> Reset the transmission buffer so data is not transmitted again.
+<3> Deactivate specified `Tx_Clock`.
+<4> Get the start memory address of the buffer, by using `fmi3LsBusUtilBufferInfo` instance.
+<5> Get the size of the buffer, by using `fmi3LsBusUtilBufferInfo` instance.
+<6> Reset the transmission buffer so data is not transmitted again.
 
 Note that, according to the FMI 3.0 standard, `fmi3GetClock` only returns `fmi3ClockActive` once per clock activation.
 
