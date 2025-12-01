@@ -848,11 +848,19 @@ fmi3Status fmi3GetBinary(fmi3Instance instance,
     }
     ...
 }
+
+fmi3Status fmi3UpdateDiscreteStates(...) {
+    ...
+    /* Reset read/write positions */
+    FMI3_LS_BUS_BUFFER_INFO_RESET(&TxBufferInfoEth);    // <5>
+    ...
+}
 ----
 <1> Verify if Bus Operations exist for transfer.
 <2> Activate specified `Tx_Clock`.
 <3> Get the start memory address of the buffer, by using `fmi3LsBusUtilBufferInfo` instance.
 <4> Get the size of the buffer, by using `fmi3LsBusUtilBufferInfo` instance.
+<5> Data will be transmitted twice if there is more than one super-dense time step.
 
 Note that, according to the FMI 3.0 standard, `fmi3GetClock` only returns `fmi3ClockActive` once per clock activation.
 
