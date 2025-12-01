@@ -773,13 +773,13 @@ fmi3Status fmi3DoStep(..., eventHandlingNeeded, ...) {
     /* Create a Transmit operation to be send */
     FMI3_LS_BUS_ETHERNET_CREATE_OP_TRANSMIT(&TxBufferInfoEth, ..., destination, sizeof(msg), msg);    // <4>
 
-    if(!TxBufferInfoEth.status){   // <5>
+    if (!TxBufferInfoEth.status) {   // <5>
         /* Error: No free buffer space available */
     }
 
     ...
 
-    if(FMI3_LS_BUS_BUFFER_LENGTH(&TxBufferInfoEth) > 0){
+    if (FMI3_LS_BUS_BUFFER_LENGTH(&TxBufferInfoEth) > 0) {
         *eventHandlingNeeded = fmi3True;    // <6>
     }
 }
