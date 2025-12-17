@@ -1,13 +1,17 @@
 == Network Abstraction ("Low-Cut")
+
 This chapter contains details on common topics of the Network Abstraction Layer.
 
 === CAN, CAN FD, CAN XL
+
 This chapter contains details on CAN, CAN FD, CAN XL specific topics.
 
-==== Getting Started with CAN, CAN FD and CAN XL [[low-cut-can-getting-started-with-can]] 
+==== Getting Started with CAN, CAN FD and CAN XL [[low-cut-can-getting-started-with-can]]
+
 This section shows the exemplary implementation in conjunction with the provided header files of the FMI-LS-BUS layered standard.
 
 ===== Provided Header Files [[low-cut-can-getting-started-provided-header-files]]
+
 Besides the textual specification for FMUs with bus support, the Layered Standard for Network Communication also provides a C API to make the creation of FMUs with bus support as easy and generalized as possible.
 
 * https://github.com/modelica/fmi-ls-bus/blob/main/headers/fmi3LsBus.h[fmi3LsBus.h] provides general macros, types and structures of common Bus Operations.
@@ -18,6 +22,7 @@ Primarily, structures are included here that allow the Bus Operations specified 
 * https://github.com/modelica/fmi-ls-bus/blob/main/headers/fmi3LsBusUtilCan.h[fmi3LsBusUtilCan.h] provides CAN, CAN FD and CAN XL explicit utility macros.
 
 ===== General Aspects
+
 Bus Operations represent protocol units to be transmitted in the environment of the layered standard based on the https://modelica.github.io/fmi-ls-bus/main/#low-cut-layered-standard-bus-protocol[Layered Standard Bus Protocol].
 All FMI variables required for the exchange are grouped by a defined https://modelica.github.io/fmi-ls-bus/main/#low-cut-bus-terminal[Bus Terminal].
 Bus Operations are created and processed within an FMU.
@@ -37,6 +42,7 @@ However, it is important to know that due to the resulting decoupling between th
 This semantics is reflected directly in the structure and handling of the <<low-cut-can-getting-started-provided-header-files,header files>> provided.
 
 ===== Buffer Handling
+
 For exchanging Bus Operations between FMUs, variables of type `fmi3Binary` type are used.
 For this reason, appropriate variables must first be set up within the implementation that represent the content for this exchange.
 The buffer variable can be easily initialized in the form of an `fmi3UInt8` array of any size.
@@ -82,6 +88,7 @@ The further usage of the `fmi3LsBusUtilBufferInfo` variable is discussed later.
 ====
 
 ===== Creating Bus Operations
+
 The header file https://github.com/modelica/fmi-ls-bus/blob/main/headers/fmi3LsBusUtilCan.h[fmi3LsBusUtilCan.h] offers macros for all Bus Operations specified by the layered standard, which minimize the effort required to create and serialize such an operation.
 The macros are always provided according to the following syntax: `FMI3_LS_BUS_<BusType>_CREATE_OP_<OperationName>`.
 Following these rule, the macro for creating a CAN Transmit operation is `FMI3_LS_BUS_CAN_CREATE_OP_CAN_TRANSMIT`.
@@ -138,8 +145,8 @@ According to the same principles, any specified operation can be created using t
 ====
 
 ===== Transmitting Bus Operations
-Within the layered standard, the https://modelica.github.io/fmi-ls-bus/main/#low-cut-variables[connection] between the data to be exchanged (`TX_Data` and `Rx_Data`) and the time of exchange 
-(`Tx_Clock` and `Rx_Clock`) has been well defined.
+
+Within the layered standard, the https://modelica.github.io/fmi-ls-bus/main/#low-cut-variables[connection] between the data to be exchanged (`TX_Data` and `Rx_Data`) and the time of exchange (`Tx_Clock` and `Rx_Clock`) has been well defined.
 The https://modelica.github.io/fmi-ls-bus/main/#low-cut-tx-triggered-clocks[simplest case] represents a `triggered` `Tx_Clock` that basically allows to signal events when returning from `fmi3DoStep`.
 
 The program code below schematically illustrates an implementation.
@@ -202,6 +209,7 @@ It should be clear that, depending on the application, the different FMI clock t
 ====
 
 ===== Receiving Bus Operations
+
 The indication whether new operations are pending within the `Rx_Data` variable is done via the `Rx_Clock`.
 This clock ticks as soon as new data is available.
 The operation-receiving FMU gets the Bus Operations via an `fmi3Binary` variable.
@@ -257,6 +265,7 @@ fmi3Status fmi3SetBinary(fmi3Instance instance,
 ====
 
 ===== Processing of Bus Operations
+
 The Bus Operations must now be processed on the receiving side.
 A suitable place for implementation represents `fmi3UpdateDiscreteStates`.
 In this case, the `FMI3_LS_BUS_READ_NEXT_OPERATION` macro can be used to successively deserialize all received Bus Operations into the correct operation structure.
@@ -304,6 +313,7 @@ fmi3Status fmi3UpdateDiscreteStates(...)
 ====
 
 ==== Examples [[low-cut-can-examples]]
+
 The following list contains examples, which illustrate both the Bus Simulation as such and Network FMUs of various designs (the code is maintained in the https://github.com/modelica/fmi-ls-bus-examples repository):
 
 * https://github.com/modelica/fmi-ls-bus-examples/tree/main/can-bus-simulation[CAN Bus Simulation]: Represents an exemplary Bus Simulation FMU for CAN.
@@ -312,9 +322,11 @@ This Bus Simulation can be used in combination with the other Network FMUs liste
 * https://github.com/modelica/fmi-ls-bus-examples/tree/main/can-node-triggered-output[CAN Triggered Output]: This demo Network FMU demonstrates sending and receiving multiple CAN Transmit operations using `triggered` output clocks.
 
 ==== Sequence Diagrams [[low-cut-can-sequence-diagrams]]
+
 This section contains sample sequences to clarify the facts in the CAN, CAN FD, CAN XL part.
 
 ===== Transmission [[low-cut-can-example-transmission]]
+
 <<#figure-can-transmission-acknowledge>> illustrates the two possible results of a `Transmit` operation, whereby the transition from FMU 1 -> FMU 2 represents the successful case and FMU 2 -> FMU 1 represents the unsuccessful case.
 For the second transmission, the Bus Simulation injects a transmission error.
 In step (1), a `Transmit` operation is delivered to the Bus Simulation.
@@ -336,6 +348,7 @@ Normally, transmission failures cannot occur during a simulated bus transmission
 For advanced testing scenarios, common bus errors are used to inject transmission errors, e.g., by the Bus Simulation FMU.
 
 ===== CAN Arbitration without Buffering [[low-cut-can-example-can-arbitration-without-buffering]]
+
 <<#figure-can-arbitration-overview>> shows the realization of a CAN arbitration by using the `Arbitration Lost Behavior` option `DISCARD_AND_NOTIFY` within the `Configuration` operation.
 At the beginning, FMU 1 and FMU 2 each send network data at the same time.
 In this situation, an arbitration is necessary to decide which frame should be sent in this case.
@@ -350,10 +363,11 @@ FMU 1 receives a `Confirm` operation, because the specified frame with CAN ID 15
 [#figure-can-arbitration-overview]
 image::images/can_arbitration_overview.svg[width=1000]
 
-_[Note: The path shown represents the intended approach.
-Other implementations may also be valid according to the FMI specification.]_
+NOTE: Note: The path shown represents the intended approach.
+Other implementations may also be valid according to the FMI specification.
 
 ===== CAN Arbitration with Buffering [[low-cut-can-example-can-arbitration-with-buffering]]
+
 <<#figure-can-arbitration-overview-with-buffer>> shows the realization of a CAN arbitration by using the `Arbitration Lost Behavior` option `BUFFER_AND_RETRANSMIT` within the `Configuration` operation.
 At the beginning, FMU 1 and FMU 2 each send network data at the same time.
 In this situation, an arbitration is necessary to decide which frame should be sent in this case.
@@ -369,10 +383,11 @@ FMU 1 gets a `Confirm` operation, because the specified frame with CAN ID 15 was
 [#figure-can-arbitration-overview-with-buffer]
 image::images/can_arbitration_overview_with_buffer.svg[width=1000]
 
-_[Note: The path shown represents the intended approach.
-Other implementations may also be valid according to the FMI specification.]_
+NOTE: Note: The path shown represents the intended approach.
+Other implementations may also be valid according to the FMI specification.
 
 ==== Realization of CAN Error Handling [[low-cut-can-realization-of-can-error-handling]]
+
 This chapter describes a possible implementation of the CAN error handling within Network FMUs using a rule set based on `Bus Error` operations.
 According to the original CAN error confinement rules, each Network FMU provides its own Transmit Error Counter (TEC), Receive Error Counter (REC) and current CAN node state.
 The values for TEC and REC will be increased and decreased with respect to the `Error Code`, `Is Sender` and `Error Flag` arguments of a `Bus Error` operation.
@@ -408,12 +423,15 @@ Also `Bus Error` operations are not available in this scenario, i.e. the values 
 In this case, it is recommended to either implement error handling in a different manner or to disable it completely within the specified Network FMU.
 
 === FlexRay
+
 This chapter contains details on FlexRay specific topics.
 
-==== Getting Started with FlexRay [[low-cut-flexray-getting-started-with-flexray]] 
+==== Getting Started with FlexRay [[low-cut-flexray-getting-started-with-flexray]]
+
 This section shows the exemplary implementation in conjunction with the provided header files of the FMI-LS-BUS layered standard.
 
 ===== Provided Header Files [[low-cut-flexray-getting-started-provided-header-files]]
+
 Besides the textual specification for FMUs with bus support, the Layered Standard for Network Communication also provides a C API to make the creation of FMUs with bus support as easy and generalized as possible.
 
 * https://github.com/modelica/fmi-ls-bus/blob/main/headers/fmi3LsBus.h[fmi3LsBus.h] provides general macros, types and structures of common Bus Operations.
@@ -424,6 +442,7 @@ Primarily, structures are included here that allow the Bus Operations specified 
 * https://github.com/modelica/fmi-ls-bus/blob/main/headers/fmi3LsBusUtilFlexRay.h[fmi3LsBusUtilFlexRay.h] provides FlexRay explicit utility macros.
 
 ===== General Aspects
+
 Bus Operations represent protocol units to be transmitted in the environment of the layered standard based on the https://modelica.github.io/fmi-ls-bus/main/#low-cut-layered-standard-bus-protocol[Layered Standard Bus Protocol].
 All FMI variables required for the exchange are grouped by a defined https://modelica.github.io/fmi-ls-bus/main/#low-cut-bus-terminal[Bus Terminal].
 Bus Operations are created and processed within an FMU.
@@ -443,6 +462,7 @@ However, it is important to know that due to the resulting decoupling between th
 This semantics is reflected directly in the structure and handling of the <<low-cut-flexray-getting-started-provided-header-files,header files>> provided.
 
 ===== Buffer Handling
+
 For exchanging Bus Operations between FMUs, variables of type `fmi3Binary` type are used.
 For this reason, appropriate variables must first be set up within the implementation that represent the content for this exchange.
 The buffer variable can be easily initialized in the form of an `fmi3UInt8` array of any size.
@@ -488,6 +508,7 @@ The further usage of the `fmi3LsBusUtilBufferInfo` variable is discussed later.
 ====
 
 ===== Creating Bus Operations
+
 The header file https://github.com/modelica/fmi-ls-bus/blob/main/headers/fmi3LsBusUtilFlexRay.h[fmi3LsBusUtilFlexRay.h] offers macros for all Bus Operations specified by the layered standard, which minimize the effort required to create and serialize such an operation.
 The macros are always provided according to the following syntax: `FMI3_LS_BUS_<BusType>_CREATE_OP_<OperationName>`.
 Following these rule, the macro for creating a FlexRay Transmit operation is `FMI3_LS_BUS_FLEXRAY_CREATE_OP_TRANSMIT`.
@@ -546,6 +567,7 @@ According to the same principles, any specified operation can be created using t
 ====
 
 ===== Receiving Bus Operations
+
 The indication whether new operations are pending within the `Rx_Data` variable is done via the `Rx_Clock`.
 This clock ticks as soon as new data is available.
 The operation-receiving FMU gets the Bus Operations via an `fmi3Binary` variable.
@@ -601,6 +623,7 @@ fmi3Status fmi3SetBinary(fmi3Instance instance,
 ====
 
 ===== Processing of Bus Operations
+
 The Bus Operations must now be processed on the receiving side.
 A suitable place for implementation represents `fmi3UpdateDiscreteStates`.
 In this case, the `FMI3_LS_BUS_READ_NEXT_OPERATION` macro can be used to successively deserialize all received Bus Operations into the correct operation structure.
@@ -648,6 +671,7 @@ fmi3Status fmi3UpdateDiscreteStates(...)
 ====
 
 ===== Timing [[low-cut-flexray-timing]]
+
 Since FlexRay is a scheduled bus protocol, a time-based approach is essential.
 Within the FMI-LS-BUS, a time window has been described in detail for the https://modelica.github.io/fmi-ls-bus/main/#low-cut-flexray-static-segment[static] and the https://modelica.github.io/fmi-ls-bus/main/#low-cut-flexray-dynamic-segment[dynamic segment], indicating when a Network FMU shall provide a Transmit operation.
 This means that the Network FMU itself must ensure that a corresponding FlexRay Transmit operation is provided at the correct time.
@@ -657,6 +681,7 @@ Using it, the currently pending cycle and macro tick can be calculated based on 
 #ToDo: Add a sample for countdown clocks within this chapter#
 
 ==== Examples [[low-cut-flexray-examples]]
+
 The following list contains examples, which illustrate both the Bus Simulation as such and Network FMUs of various designs (the code is maintained in the https://github.com/modelica/fmi-ls-bus-examples repository):
 
 * https://github.com/modelica/fmi-ls-bus-examples/tree/main/flexray-bus-simulation[FlexRay Bus Simulation]: Represents an exemplary Bus Simulation FMU for FlexRay.
@@ -665,12 +690,15 @@ This Bus Simulation can be used in combination with the other Network FMUs liste
 * https://github.com/modelica/fmi-ls-bus-examples/tree/main/flexray-node[FlexRay Countdown Clocks]: This demo Network FMU demonstrates startup, sending and receiving multiple Transmit operations using `countdown` clocks.
 
 === Ethernet
+
 This chapter contains details on Ethernet specific topics.
 
-==== Getting Started with Ethernet [[low-cut-ethernet-getting-started-with-ethernet]] 
+==== Getting Started with Ethernet [[low-cut-ethernet-getting-started-with-ethernet]]
+
 This section shows the exemplary implementation in conjunction with the provided header files of the FMI-LS-BUS layered standard.
 
 ===== Provided Header Files [[low-cut-ethernet-getting-started-provided-header-files]]
+
 Besides the textual specification for FMUs with bus support, the Layered Standard for Network Communication also provides a C API to make the creation of FMUs with bus support as easy and generalized as possible.
 
 * https://github.com/modelica/fmi-ls-bus/blob/main/headers/fmi3LsBus.h[fmi3LsBus.h] provides general macros, types and structures of common Bus Operations.
@@ -681,6 +709,7 @@ Primarily, structures are included here that allow the Bus Operations specified 
 * https://github.com/modelica/fmi-ls-bus/blob/main/headers/fmi3LsBusUtilEthernet.h[fmi3LsBusUtilEthernet.h] provides Ethernet explicit utility macros.
 
 ===== General Aspects
+
 Bus Operations represent protocol units to be transmitted in the environment of the layered standard based on the https://modelica.github.io/fmi-ls-bus/main/#low-cut-layered-standard-bus-protocol[Layered Standard Bus Protocol].
 All FMI variables required for the exchange are grouped by a defined https://modelica.github.io/fmi-ls-bus/main/#low-cut-bus-terminal[Bus Terminal].
 Bus Operations are created and processed within an FMU.
@@ -700,6 +729,7 @@ However, it is important to know that due to the resulting decoupling between th
 This semantics is reflected directly in the structure and handling of the <<low-cut-ethernet-getting-started-provided-header-files,header files>> provided.
 
 ===== Buffer Handling
+
 For exchanging Bus Operations between FMUs, variables of type `fmi3Binary` type are used.
 For this reason, appropriate variables must first be set up within the implementation that represent the content for this exchange.
 The buffer variable can be easily initialized in the form of an `fmi3UInt8` array of any size.
@@ -745,6 +775,7 @@ The further usage of the `fmi3LsBusUtilBufferInfo` variable is discussed later.
 ====
 
 ===== Creating Bus Operations
+
 The header file https://github.com/modelica/fmi-ls-bus/blob/main/headers/fmi3LsBusUtilEthernet.h[fmi3LsBusUtilEthernet.h] offers macros for all Bus Operations specified by the layered standard, which minimize the effort required to create and serialize such an operation.
 The macros are always provided according to the following syntax: `FMI3_LS_BUS_<BusType>_CREATE_OP_<OperationName>`.
 Following these rule, the macro for creating a Ethernet Transmit operation is `FMI3_LS_BUS_ETHERNET_CREATE_TRANSMIT`.
@@ -801,6 +832,7 @@ According to the same principles, any specified operation can be created using t
 ====
 
 ===== Transmitting Bus Operations
+
 Within the layered standard, the https://modelica.github.io/fmi-ls-bus/main/#low-cut-variables[connection] between the data to be exchanged (`TX_Data` and `Rx_Data`) and the time of exchange 
 (`Tx_Clock` and `Rx_Clock`) has been well defined.
 The https://modelica.github.io/fmi-ls-bus/main/#low-cut-tx-triggered-clocks[simplest case] represents a `triggered` `Tx_Clock` that basically allows to signal events when returning from `fmi3DoStep`.
@@ -877,6 +909,7 @@ It should be clear that, depending on the application, the different FMI clock t
 ====
 
 ===== Receiving Bus Operations
+
 The indication whether new operations are pending within the `Rx_Data` variable is done via the `Rx_Clock`.
 This clock ticks as soon as new data is available.
 The operation-receiving FMU gets the Bus Operations via an `fmi3Binary` variable.
@@ -937,6 +970,7 @@ fmi3Status fmi3SetBinary(fmi3Instance instance,
 ====
 
 ===== Processing of Bus Operations
+
 The Bus Operations must now be processed on the receiving side.
 A suitable place for implementation represents `fmi3UpdateDiscreteStates`.
 In this case, the `FMI3_LS_BUS_READ_NEXT_OPERATION` macro can be used to successively deserialize all received Bus Operations into the correct operation structure.
