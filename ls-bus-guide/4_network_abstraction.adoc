@@ -28,7 +28,7 @@ After the contents of the binary variables have been transferred to another FMU 
 
 .Create, process and transfer Bus Operations.
 [#figure-general-aspects-overview-can]
-image::create_process_bus_operations.svg[width=60%, align="center"]
+image::images/create_process_bus_operations.svg[width=600]
 
 The point in time where Bus Operations are transferred between different FMUs is defined by the usage of `fmi3Clock` variables.
 For this reason, the exchange of Bus Operations is always carried out within the `Event Mode`.
@@ -330,7 +330,7 @@ For FMU 1, the `Error Flag` argument is set to `PRIMARY_ERROR_FLAG`, which means
 
 .Successful and unsuccessful cases of a CAN transmission.
 [#figure-can-transmission-acknowledge]
-image::can_transmission_acknowledge.svg[width=60%, align="center"]
+image::images/can_transmission_acknowledge.svg[width=700]
 
 Normally, transmission failures cannot occur during a simulated bus transmission.
 For advanced testing scenarios, common bus errors are used to inject transmission errors, e.g., by the Bus Simulation FMU.
@@ -348,7 +348,7 @@ FMU 1 receives a `Confirm` operation, because the specified frame with CAN ID 15
 
 .Arbitration of CAN frames within Bus Simulation.
 [#figure-can-arbitration-overview]
-image::can_arbitration_overview.svg[width=80%, align="center"]
+image::images/can_arbitration_overview.svg[width=1000]
 
 _[Note: The path shown represents the intended approach.
 Other implementations may also be valid according to the FMI specification.]_
@@ -367,7 +367,7 @@ FMU 1 gets a `Confirm` operation, because the specified frame with CAN ID 15 was
 
 .Arbitration of CAN frames with buffering within Bus Simulation.
 [#figure-can-arbitration-overview-with-buffer]
-image::can_arbitration_overview_with_buffer.svg[width=80%, align="center"]
+image::images/can_arbitration_overview_with_buffer.svg[width=1000]
 
 _[Note: The path shown represents the intended approach.
 Other implementations may also be valid according to the FMI specification.]_
@@ -380,7 +380,7 @@ Based on the values of TEC and REC, the CAN controller moves in the following st
 
 .CAN node state machine.
 [#figure-can-error-state-machine]
-image::can_error_state_machine.svg[width=60%, align="center"]
+image::images/can_error_state_machine.svg[width=600]
 
 This CAN node state machine and the related TEC and REC values have to be implemented in the Network FMUs.
 `Bus Error` operations shall be directly used to maintain the TEC and REC values.
@@ -434,7 +434,7 @@ After the contents of the binary variables have been transferred to another FMU 
 
 .Create, process and transfer Bus Operations.
 [#figure-general-aspects-overview-flexray]
-image::create_process_bus_operations.svg[width=60%, align="center"]
+image::images/create_process_bus_operations.svg[width=600]
 
 The point in time where Bus Operations are transferred between different FMUs is defined by the usage of `fmi3Clock` variables.
 For this reason, the exchange of Bus Operations is always carried out within the `Event Mode`.
@@ -691,7 +691,7 @@ After the contents of the binary variables have been transferred to another FMU 
 
 .Create, process and transfer Bus Operations.
 [#figure-general-aspects-overview-ethernet]
-image::create_process_bus_operations.svg[width=60%, align="center"]
+image::images/create_process_bus_operations.svg[width=600]
 
 The point in time where Bus Operations are transferred between different FMUs is defined by the usage of `fmi3Clock` variables.
 For this reason, the exchange of Bus Operations is always carried out within the `Event Mode`.
