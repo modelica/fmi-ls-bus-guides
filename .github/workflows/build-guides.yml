@@ -17,10 +17,10 @@ jobs:
       uses: actions/checkout@v3
     - name: create build directory
       run: |
-        mkdir -p build/images
-        mkdir -p build/theme/css
-        mkdir -p build/theme/images
-        mkdir -p build/theme/js
+        mkdir -p build/ls-bus-guide/images
+        mkdir -p build/ls-bus-guide/theme/css
+        mkdir -p build/ls-bus-guide/theme/images
+        mkdir -p build/ls-bus-guide/theme/js
     - name: build LS-BUS implementers guide
       uses: avattathil/asciidoctor-action@master
       with:
