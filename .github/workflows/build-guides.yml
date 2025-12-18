@@ -15,14 +15,25 @@ jobs:
     steps:
     - name: checkout
       uses: actions/checkout@v3
-    - name: prepare
-      run: mkdir build && mkdir build/ls-bus-guide
+      with:
+        submodules: recursive
+    - name: create build directory
+      run: |
+        mkdir -p build/ls-bus-guide/images
+        mkdir -p build/ls-bus-guide/theme/css
+        mkdir -p build/ls-bus-guide/theme/images
+        mkdir -p build/ls-bus-guide/theme/js
     - name: build LS-BUS implementers guide
       uses: avattathil/asciidoctor-action@master
       with:
         program: "asciidoctor -D build/ls-bus-guide --backend=html5 --attribute=revnumber=${GITHUB_REF#refs/heads/}-$GITHUB_SHA --attribute=revdate=$(date +%F) ls-bus-guide/index.adoc"
-    - name: copy images
-      run: tar cf - ls-bus-guide/images | tar xfC - build
+    - name: copy resources
+      run: |
+        cp LICENSE.txt build/ls-bus-guide
+        cp ls-bus-guide/images/*.svg build/ls-bus-guide/images
+        cp ls-bus-guide/theme/css/*.css build/ls-bus-guide/theme/css
+        cp ls-bus-guide/theme/images/*.svg build/ls-bus-guide/theme/images
+        cp ls-bus-guide/theme/js/*.js build/ls-bus-guide/theme/js
     - name: archive LS-BUS implementers guide
       uses: actions/upload-artifact@v4
       with:

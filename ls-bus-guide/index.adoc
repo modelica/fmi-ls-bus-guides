@@ -1,27 +1,32 @@
 = FMI LS BUS Implementers' Guide
-:doctype: book
-:imagesdir: images
 :sectnums:
 :sectnumlevels: 5
 :toc: left
 :toc-title: Contents
 :toclevels: 5
+:idprefix:
+:idseparator: -
 :xrefstyle: short
 :docinfo: shared
-:stylesheet: fmi-guide.css
+:docinfodir: theme/docinfo
 :stem: latexmath
 :source-highlighter: highlightjs
+:highlightjs-theme: github
 :nofooter:
+:favicon: images/favicon.ico
 :icons: font
+:website-url: https://fmi-standard.org/
+:repo-url: https://github.com/modelica/fmi-ls-bus-guides
+:logo: FMI
 
-include::0___preamble.adoc[]
+include::0_preamble.adoc[]
 
-include::1___introduction.adoc[]
+include::1_introduction.adoc[]
 
-include::2___common.adoc[]
+include::2_common.adoc[]
 
-include::3____physical_signal_abstraction.adoc[]
+include::3_physical_signal_abstraction.adoc[]
 
-include::4____network_abstraction.adoc[]
+include::4_network_abstraction.adoc[]
 
-include::A___literature.adoc[]
+include::A_literature.adoc[]

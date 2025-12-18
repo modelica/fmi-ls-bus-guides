@@ -3,9 +3,6 @@ This document is continually revised based on implementer and user feedback and 
 All of the content is to be considered non-normative and shall not be considered to supplant any normative statement in the FMI 3.0 standard, the FMI-LS-BUS layered standard, or any other standard or layered standard.
 https://github.com/modelica/fmi-guides/releases[Releases] and https://github.com/modelica/fmi-guides/issues[issues] can be found on https://github.com/modelica/fmi-guides[github.com/modelica/fmi-guides].
 
-{empty} +
-{empty}
-
 Copyright (C) 2023-2025 The Modelica Association Project FMI.
 
 This document is licensed under the Attribution-ShareAlike 4.0 International license.
@@ -14,5 +11,3 @@ The licenses text can be found in the https://raw.githubusercontent.com/modelica
 
 Attention is drawn to the possibility that some of the elements of this document may be the subject of patent rights.
 Modelica Association shall not be held responsible for identifying such patent rights.
-
-{empty}

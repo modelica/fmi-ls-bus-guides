@@ -1,0 +1,3 @@
+[submodule "ls-bus-guide/theme"]
+	path = ls-bus-guide/theme
+	url = git@github.com:modelica/ma-asciidoctor-theme.git
